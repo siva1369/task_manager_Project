@@ -1,0 +1,86 @@
+task_manager:-
+------------
+
+for this we need 3 environments 
+
+Jenkins
+
+SonarQube
+
+nexus 
+
+take 3 mechines t2 medium with 20gb storage
+
+security group = 25, 3000-10000 , 80, 443, 587, 22, 6443, 465.
+
+Jenkins - 8080
+
+SonarQube - docker - 9000
+
+nexus - docker - 8081
+
+ 
+
+Jenkins plugins = SonarQube , config files, maven, docker, docker pipeline, stage view.
+
+add tools = docker , maven, SonarQube
+
+
+
+for docker installation 
+
+sudo apt-get install docker.io (or go through with official site)
+
+basically docker runs in root user only , but we can use in normal 
+
+sudo usermod -aG docker ubuntu  (ubuntu = user name)
+
+OR 
+
+full access for any user
+
+docker chmod 666 /var/run/docker.sock
+
+
+for SonarQube installation 
+
+docker run -d -p 9000:9000 SonarQube:lts-commnity
+
+for install nexus
+
+docker run -d -p 8081:8081 sonatype/nexus3
+
+for password perpase we need to enter into nexus container 
+
+docker exec -it containerId /bin/bash 
+
+
+
+
+
+pipe line stages
+
+
+
+1. git checkout - git:git - clone source code
+
+2. compile - sh 'mvn compile' - for syntax errors
+
+3. test - sh 'mvn test' - run the unit testcases
+
+4. trivy FS-scan - for security check of the dependencys and file system
+
+5. SonarQube analysis - for static code analysis
+
+6. maven build - build an artifact
+
+7. publish to nexus - push to nexus 
+
+8. docker build - build an image
+
+9. trivy scan - scan the image 
+
+10 push to docker hub- docker image repository
+
+
+
